@@ -1,11 +1,11 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import ApplicationInventoryTable from './Components/ApplicationInventoryTable/ApplicationInventoryTable';
 
 function App() {
   return (
     <div className="App">
-   
+      <ApplicationInventoryTable />
     </div>
   );
 }
