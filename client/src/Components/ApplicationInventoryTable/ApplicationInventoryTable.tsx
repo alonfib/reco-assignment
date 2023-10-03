@@ -1,28 +1,28 @@
 import React, { useState,useEffect } from 'react';
 import Table from '../Common/Table/Table';
-import { put } from '../../api';
+import { get, put } from '../../api';
 import { Application } from './types';
 import ApplicationModal from './ApplicationModal/ApplicationModal';
 
 
 const mockData: Application[] = [
   {
-    name: 'Application 1',
+    appName: 'Application 1',
     category: 'Category A',
-    connectors: ['Connector 1', 'Connector 2'],
-    users: ['User 1', 'User 2', 'User 3'],
+    appSources: ['Connector 1', 'Connector 2'],
+    appId: 'User 1',
   },
   {
-    name: 'Application 2',
+    appName: 'Application 2',
     category: 'Category B',
-    connectors: ['Connector 3', 'Connector 4'],
-    users: ['User 4', 'User 5'],
+    appSources: ['Connector 3', 'Connector 4'],
+    appId: 'User 4',
   },
   {
-    name: 'Application 3',
+    appName: 'Application 3',
     category: 'Category A',
-    connectors: ['Connector 2', 'Connector 5'],
-    users: ['User 1', 'User 6'],
+    appSources: ['Connector 2', 'Connector 5'],
+    appId: 'User 1',
   },
   // Add more mock data entries as needed
 ];
@@ -30,7 +30,7 @@ const mockData: Application[] = [
 const columns: { label: string, key: string }[] = [
   {
     label: 'Application name',
-    key: 'name',
+    key: 'appName',
   },
   {
     label: 'Category',
@@ -38,7 +38,7 @@ const columns: { label: string, key: string }[] = [
   },
   {
     label: 'Connectors (Data source)',
-    key: 'connectors',
+    key: 'appSources',
   },
 ];
 
@@ -48,18 +48,25 @@ const ApplicationInventoryTable: React.FC = ({ }) => {
   const [rowsPerPage, setRowsPerPage] = useState<number>(25);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+
   const fetchData = async () => {
-    const response = await put('get-apps', {
-      pageNumber: 0,
-      pageSize: 0
+    const response  = await get('', {
+      pageNumber: 1,
+      pageSize: 25
     });
-    const data = await response?.json();
-    setTableData(data);
+
+
+    const newData:Application[] = response?.appRows;
+
+    console.log("response", response);
+    console.log("newData", newData);
+
+    setTableData(newData);
+
   }
 
   useEffect(() => {
     fetchData()
-    setTableData(mockData)
   }, [])
 
   const handleRowClick = (app: Application) => {
@@ -80,7 +87,7 @@ const ApplicationInventoryTable: React.FC = ({ }) => {
         <option value="25">25 rows per page</option>
         <option value="50">50 rows per page</option>
       </select>
-      <Table columns={columns} data={mockData} rowClickHandler={handleRowClick} />
+      <Table columns={columns} data={tableData} rowClickHandler={handleRowClick} />
       {!!selectedApp && <ApplicationModal application={selectedApp} isOpen={!!selectedApp} onClose={onModalClose} />}
       
     </div>

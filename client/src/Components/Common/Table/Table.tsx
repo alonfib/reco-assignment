@@ -22,7 +22,7 @@ interface Props<T> {
   rowClickHandler?: (item: T) => void;
 }
 
-const CommonTable: React.FC<Props<any>> = ({ data, columns, rowClickHandler }) => {
+const CommonTable: React.FC<Props<any>> = ({ data = [], columns, rowClickHandler }) => {
   const [selectedItem, setSelectedItem] = useState<Record<string, any> | null>(null);
   // maybe move out of component
   const [rowsPerPage, setRowsPerPage] = useState(25);

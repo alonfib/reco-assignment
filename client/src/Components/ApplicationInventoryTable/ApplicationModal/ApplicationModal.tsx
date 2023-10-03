@@ -27,7 +27,7 @@ const ApplicationModal: React.FC<ModalProps> = ({ application, isOpen = false, o
     onClose();
   };
 
-  const tableData = application.users.map(user => ({ user }));
+  const tableData = application?.appSources?.map(source => ({ source }));
 
   return (
     <div>
@@ -35,10 +35,10 @@ const ApplicationModal: React.FC<ModalProps> = ({ application, isOpen = false, o
       <CommonModal open={open} onClose={handleClose} title='App overview'>
         <div className="application-modal-container">
           <div className="application-details-container">
-            <div className='detail'>Name: {application.name}</div>
+            <div className='detail'>Name: {application.appName}</div>
             <div className='detail'>Category: {application.category}</div>
-            <div className='detail'>Users:{application.users.length}</div>
-            <div className='detail'>Connectors: {application.connectors.join(', ')}</div>
+            <div className='detail'>Users:{application.appSources.length}</div>
+            <div className='detail'>Connectors: {application.appSources.join(', ')}</div>
           </div>
           <CommonTable columns={collumns} data={tableData} />
         </div>

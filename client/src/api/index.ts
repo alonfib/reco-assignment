@@ -2,7 +2,9 @@ import axios from "axios";
 
 // const proxy = 'https://cors-anywhere-herokuapp.com/';
 const proxy = 'https://cors-proxy.htmldriven.com/?url=';
-const baseUrl = `https://615f-212-199-47-186.ngrok-free.app/api/v1/app-service/`;
+// const baseUrl = `https://615f-212-199-47-186.ngrok-free.app/api/v1/app-service/`;
+
+const baseUrl = "http://localhost:5000/";
 
 export const get = async (url: string, params: any = {}) => {
   try {

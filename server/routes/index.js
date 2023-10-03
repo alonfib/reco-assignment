@@ -4,16 +4,15 @@ const axios = require("axios");
 /* GET home page. */
 router.get('/', async (req, res, next) => {
   try {
-    // Define the URL for your PUT request
+    const pageNumber = parseInt(req.query.pageNumber) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 25;
     const apiUrl = 'https://615f-212-199-47-186.ngrok-free.app/api/v1/app-service/get-apps';
-    // Define the data to send in the PUT request
+
     const requestData = {
-      pageNumber: 1,
-      pageSize: 25
-      // Add your data here
-      // For example: key1: 'value1', key2: 'value2'
+      pageNumber: pageNumber,
+      pageSize: pageSize
     };
-    // Make the Axios PUT request
+
     const response = await axios.put(apiUrl, requestData, {
       headers: {
         Accept: 'application/json',
@@ -21,10 +20,6 @@ router.get('/', async (req, res, next) => {
       },
     });
 
-    // Handle the response as needed
-    console.log('PUT Request Successful:', response.data);
-
-    // Return the response data to the client
     res.json(response.data);
   } catch (error) {
     console.error('PUT Request Error:', error);

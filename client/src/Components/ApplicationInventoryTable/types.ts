@@ -1,7 +1,7 @@
 
 export interface Application {
-  name: string;
+  appId: string;
+  appName: string;
   category: string;
-  connectors: string[];
-  users: string[];
+  appSources: string[];
 }
