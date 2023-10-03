@@ -1,70 +1,36 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from '../Common/Table/Table';
 import { get, put } from '../../api';
 import { Application } from './types';
 import ApplicationModal from './ApplicationModal/ApplicationModal';
+import './ApplicationInventoryTable.scss';
+import { columns } from './columns';
 
-
-const mockData: Application[] = [
-  {
-    appName: 'Application 1',
-    category: 'Category A',
-    appSources: ['Connector 1', 'Connector 2'],
-    appId: 'User 1',
-  },
-  {
-    appName: 'Application 2',
-    category: 'Category B',
-    appSources: ['Connector 3', 'Connector 4'],
-    appId: 'User 4',
-  },
-  {
-    appName: 'Application 3',
-    category: 'Category A',
-    appSources: ['Connector 2', 'Connector 5'],
-    appId: 'User 1',
-  },
-  // Add more mock data entries as needed
-];
-
-const columns: { label: string, key: string }[] = [
-  {
-    label: 'Application name',
-    key: 'appName',
-  },
-  {
-    label: 'Category',
-    key: 'category',
-  },
-  {
-    label: 'Connectors (Data source)',
-    key: 'appSources',
-  },
-];
-
-const ApplicationInventoryTable: React.FC = ({ }) => {
-  const [tableData, setTableData] = useState<Application[]>([]); 
+const ApplicationInventoryTable: React.FC = () => {
+  const [tableData, setTableData] = useState<Application[]>([]);
   const [selectedApp, setSelectedApp] = useState<Application | undefined>();
   const [rowsPerPage, setRowsPerPage] = useState<number>(25);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [totalAppsCount, setTotalAppsCount] = useState<number>(0);
 
-
-  const fetchData = async ({page = currentPage, size = rowsPerPage}) => {
-    const response  = await get('', {
+  const fetchData = async ({ page = currentPage, size = rowsPerPage }) => {
+    const response = await get('', {
       pageNumber: page,
-      pageSize: size
+      pageSize: size,
     });
 
-    const newData:Application[] = response?.appRows;
-    setTableData(newData);
-
-    console.log("newData", newData)
-  }
+    if (response) {
+      const newData: Application[] = response?.appRows;
+      const newTotalCount: number = response?.totalCount;
+      setTotalAppsCount(newTotalCount)
+      setTableData(newData);
+    }
+  };
 
   useEffect(() => {
-    fetchData({})
-  }, [])
+    fetchData({});
+  }, []);
 
   const handleRowClick = (app: Application) => {
     setSelectedApp(app);
@@ -72,23 +38,46 @@ const ApplicationInventoryTable: React.FC = ({ }) => {
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<{ value: string }>) => {
     const newRowsPerPage = parseInt(event.target.value, 10);
+    setCurrentPage(0);
     setRowsPerPage(newRowsPerPage);
-    fetchData({ size: newRowsPerPage });
+    fetchData({ size: newRowsPerPage, page: 0 });
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    fetchData({ page: newPage, size: rowsPerPage });
   };
 
   const onModalClose = () => {
     setSelectedApp(undefined);
-  }
+  };
 
   return (
-    <div className='application-inventory-table'>
-      <select value={rowsPerPage.toString()} onChange={handleChangeRowsPerPage}>
-        <option value="25">25 rows per page</option>
-        <option value="50">50 rows per page</option>
-      </select>
+    <div className="application-inventory-table">
+      <div className="title">App Inventory</div>
       <Table columns={columns} data={tableData} rowClickHandler={handleRowClick} />
+      <div className="pagination">
+        <div className="page-navigation">
+          <button
+            disabled={currentPage === 0}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            Previous
+          </button>
+          <span>{`Page ${currentPage + 1} of ${totalAppsCount / rowsPerPage}`}</span>
+          <button
+            disabled={(currentPage + 1) * rowsPerPage >= totalAppsCount}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+        <select value={rowsPerPage.toString()} onChange={handleChangeRowsPerPage}>
+          <option value="25">25 rows per page</option>
+          <option value="50">50 rows per page</option>
+        </select>
+      </div>
       {!!selectedApp && <ApplicationModal application={selectedApp} isOpen={!!selectedApp} onClose={onModalClose} />}
-      
     </div>
   );
 };

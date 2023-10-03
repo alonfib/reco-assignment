@@ -12,6 +12,8 @@ import { makeStyles } from '@mui/styles';
 
 import CloseIcon from '@mui/icons-material/Close';
 
+
+// TODO: CHANGE TO BE SLIDER
 interface Props {
   open: boolean;
   onClose: () => void;
