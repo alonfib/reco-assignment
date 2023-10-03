@@ -32,10 +32,11 @@ const useStyles = makeStyles(() => ({
   },
   modalContent: {
     position: 'relative',
-    height: '90vh',
-    width: '80vw',
+    height: '100vh',
+    width: '70vw',
     overflowY: 'auto',
     border: 'none',
+    padding: "16px 40px"
   },
   modalHeader: {
     display: 'flex',
@@ -68,14 +69,14 @@ const CommonModal: React.FC<Props> = ({
           className={classes.modalContent}
           style={customStyles}
         >
-          {title && (
-            <Box className={classes.modalHeader}>
+          <Box className={classes.modalHeader}>
+            {title && (
               <Typography variant="h6">{title}</Typography>
-              <IconButton onClick={onClose} color="inherit">
-                <CloseIcon />
-              </IconButton>
-            </Box>
-          )}
+            )}
+            <IconButton onClick={onClose} color="inherit">
+              <CloseIcon />
+            </IconButton>
+          </Box>
           {children}
         </Paper>
       </Fade>

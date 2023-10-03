@@ -1,0 +1,15 @@
+.application-modal-container {
+  .application-details-container {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #0037ff;
+    background-color: #eef4ff;
+
+    .detail {
+      padding: 6px 0;
+    }
+  }
+  
+}

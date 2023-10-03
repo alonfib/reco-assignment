@@ -1,16 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Table from '../Common/Table/Table';
+import { put } from '../../api';
+import { Application } from './types';
+import ApplicationModal from './ApplicationModal/ApplicationModal';
 
-interface Application {
-  name: string;
-  category: string;
-  connectors: string[];
-  users: string[];
-}
 
-interface Props {
-  applications?: Application[];
-}
 const mockData: Application[] = [
   {
     name: 'Application 1',
@@ -33,8 +27,7 @@ const mockData: Application[] = [
   // Add more mock data entries as needed
 ];
 
-
-const columns: {label: string, key: string}[] = [
+const columns: { label: string, key: string }[] = [
   {
     label: 'Application name',
     key: 'name',
@@ -49,30 +42,47 @@ const columns: {label: string, key: string}[] = [
   },
 ];
 
-const ApplicationInventoryTable: React.FC<Props> = ({ applications }) => {
-  const [selectedApp, setSelectedApp] = useState<Application | null>(null);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+const ApplicationInventoryTable: React.FC = ({ }) => {
+  const [tableData, setTableData] = useState<Application[]>([]); 
+  const [selectedApp, setSelectedApp] = useState<Application | undefined>();
+  const [rowsPerPage, setRowsPerPage] = useState<number>(25);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const fetchData = async () => {
+    const response = await put('get-apps', {
+      pageNumber: 0,
+      pageSize: 0
+    });
+    const data = await response?.json();
+    setTableData(data);
+  }
+
+  useEffect(() => {
+    fetchData()
+    setTableData(mockData)
+  }, [])
 
   const handleRowClick = (app: Application) => {
     setSelectedApp(app);
-  };
-
-  const handleCloseSlideIn = () => {
-    setSelectedApp(null);
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<{ value: string }>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
+  const onModalClose = () => {
+    setSelectedApp(undefined);
+  }
+
   return (
     <div className='application-inventory-table'>
-      
       <select value={rowsPerPage.toString()} onChange={handleChangeRowsPerPage}>
         <option value="25">25 rows per page</option>
         <option value="50">50 rows per page</option>
       </select>
-      <Table columns={columns} data={mockData} />
+      <Table columns={columns} data={mockData} rowClickHandler={handleRowClick} />
+      {!!selectedApp && <ApplicationModal application={selectedApp} isOpen={!!selectedApp} onClose={onModalClose} />}
+      
     </div>
   );
 };

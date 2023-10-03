@@ -11,18 +11,18 @@ import {
   Typography,
 } from '@mui/material';
 
-interface TableColumn {
+export interface TableColumn {
   label: string;
   key: string;
 }
 
-interface Props {
-  data: Record<string, any>[]; 
-  columns: TableColumn[]; 
-  rowClickHandler?: (item: Record<string, any>) => void;
+interface Props<T> {
+  data: T[];
+  columns: TableColumn[];
+  rowClickHandler?: (item: T) => void;
 }
 
-const CommonTable: React.FC<Props> = ({ data, columns, rowClickHandler }) => {
+const CommonTable: React.FC<Props<any>> = ({ data, columns, rowClickHandler }) => {
   const [selectedItem, setSelectedItem] = useState<Record<string, any> | null>(null);
   // maybe move out of component
   const [rowsPerPage, setRowsPerPage] = useState(25);
