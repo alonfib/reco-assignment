@@ -7,8 +7,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Slide,
-  Typography,
 } from '@mui/material';
 
 export interface TableColumn {
@@ -25,7 +23,6 @@ interface Props<T> {
 const CommonTable: React.FC<Props<any>> = ({ data = [], columns, rowClickHandler }) => {
   const [selectedItem, setSelectedItem] = useState<Record<string, any> | null>(null);
   const handleRowClick = (item: Record<string, any>) => {
-    setSelectedItem(item);
     if (rowClickHandler) {
       rowClickHandler(item);
     }

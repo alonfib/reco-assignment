@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Table from '../Common/Table/Table';
 import { get, put } from '../../api';
 import { Application } from './types';
 import ApplicationSlider from './ApplicationModal/ApplicationSlider';
 import './ApplicationInventoryTable.scss';
 import { columns } from './columns';
+import useInfiniteScroll from '../hooks/useInfiniteScroll';
+
 
 const ApplicationInventoryTable: React.FC = () => {
   const [tableData, setTableData] = useState<Application[]>([]);
@@ -15,6 +17,8 @@ const ApplicationInventoryTable: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [refetchAttempts, setRefetchAttempts] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const ref = useRef<any>(null);
+  const infiniteScroll = useInfiniteScroll(ref, 0, async () => handlePageChange(currentPage + 1))
 
   const fetchData = async ({ page = currentPage, size = rowsPerPage }) => {
     setIsLoading(true);
@@ -77,34 +81,14 @@ const ApplicationInventoryTable: React.FC = () => {
   };
 
   return (
-    <div className="application-inventory-table">
-      <div className="title">App Inventory</div>
-      {errorMessage.length > 0 ? <div className="error-message">{errorMessage}</div>
-      :
-      <Table columns={columns} data={tableData} rowClickHandler={handleRowClick} />
-      }
-      <div className="pagination">
-        <div className="page-navigation">
-          <button
-            disabled={currentPage === 0 || isLoading}
-            onClick={() => handlePageChange(currentPage - 1)}
-          >
-            Previous
-          </button>
-          <span>{`Page ${currentPage + 1} of ${totalAppsCount / rowsPerPage}`}</span>
-          <button
-            disabled={((currentPage + 1) * rowsPerPage >= totalAppsCount) || isLoading}
-            onClick={() => handlePageChange(currentPage + 1)}
-          >
-            Next
-          </button>
-        </div>
-        <select value={rowsPerPage.toString()} onChange={handleChangeRowsPerPage}>
-          <option value="25">25 rows per page</option>
-          <option value="50">50 rows per page</option>
-        </select>
-      </div>
-      {!!selectedApp && <ApplicationSlider application={selectedApp} isOpen={!!selectedApp} onClose={onModalClose} />}
+    <div className="application-inventory-table" ref={ref}>
+        <div className="title">App Inventory</div>
+        {errorMessage.length > 0 ? <div className="error-message">{errorMessage}</div>
+          :
+
+          <Table columns={columns} data={tableData} rowClickHandler={handleRowClick} />
+        }
+        {!!selectedApp && <ApplicationSlider application={selectedApp} isOpen={!!selectedApp} onClose={onModalClose} />}
     </div>
   );
 };
