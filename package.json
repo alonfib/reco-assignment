@@ -4,10 +4,10 @@
   "description": "Reco home assigment",
   "main": "dist/index.js",
   "scripts": {
-    "install:app": "npm i && concurrently \"cd server && npm i\" \"cd client && npm i && npm i @mui/styles --force\"",
+    "install:app": "npm i && concurrently \"cd server && npm i\" \"cd client && npm i --force\"",
     "start:client": "cd client && npm start",
     "start:server": "nodemon --watch server --exec ts-node server/server.js",
-    "start": "concurrently \"npm run start:server .env\" \"npm run start:client .env\"",
+    "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"

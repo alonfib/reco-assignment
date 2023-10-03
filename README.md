@@ -15,11 +15,13 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 Install server & client together,
 
-**If its not working** - try running **npm i,** and that running the install:app again.
+**If not working** - try running **npm i,** and that running the install:app again.
 
-**Theres might be a problem with one of the external librarys.** 
+**Theres might be a problem with one of the external librarys.**
 
 to fix this install this on * CLIENT DIRECTORY *:   npm i @mui/styles --force
+
+**If STILL not working - install client and server menualy in cmd with npm i**
 
 ### `npm run start:client`
 
