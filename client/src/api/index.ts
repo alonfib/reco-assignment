@@ -12,6 +12,7 @@ export const get = async (url: string, params: any = {}) => {
     return res.data;
   } catch (err) {
     console.log(err);
+    return undefined
   }
 };
 export const put = async (url: string, params: any = {}) => {

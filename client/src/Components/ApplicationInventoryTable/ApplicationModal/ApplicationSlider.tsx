@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Application } from '../types';
-import CommonModal from '../../Common/Modal/Modal';
+import CommonSlider from '../../Common/Slider/Slider';
 import CommonTable, { TableColumn } from '../../Common/Table/Table';
-import './ApplicationModal.scss';
-interface ModalProps {
+import './ApplicationSlider.scss';
+interface ApplicationSliderProps {
   application: Application; // Assuming you pass an Application object as a prop
   onClose: () => void;
   isOpen?: boolean;
 }
 
-const collumns: TableColumn[] = [{ key: "user", label: 'Name' }]
+const collumns: TableColumn[] = [{ key: "source", label: 'Name' }]
 
-const ApplicationModal: React.FC<ModalProps> = ({ application, isOpen = false, onClose }) => {
+const ApplicationSlider: React.FC<ApplicationSliderProps> = ({ application, isOpen = false, onClose }) => {
   const [open, setOpen] = useState(isOpen);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const ApplicationModal: React.FC<ModalProps> = ({ application, isOpen = false, o
   return (
     <div>
       <button onClick={handleOpen}>Open Application Details</button>
-      <CommonModal open={open} onClose={handleClose} title='App overview'>
+      <CommonSlider open={open} onClose={handleClose} title='App overview'>
         <div className="application-modal-container">
           <div className="application-details-container">
             <div className='detail'>Name: {application.appName}</div>
@@ -42,9 +42,9 @@ const ApplicationModal: React.FC<ModalProps> = ({ application, isOpen = false, o
           </div>
           <CommonTable columns={collumns} data={tableData} />
         </div>
-      </CommonModal>
+      </CommonSlider>
     </div>
   );
 };
 
-export default ApplicationModal;
+export default ApplicationSlider;
