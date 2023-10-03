@@ -19,7 +19,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use("/", indexRouter);
-app.use("/otherRouter", otherRouter);
 
 
 app.listen(serverPort, () => {

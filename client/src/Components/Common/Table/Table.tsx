@@ -24,9 +24,6 @@ interface Props<T> {
 
 const CommonTable: React.FC<Props<any>> = ({ data = [], columns, rowClickHandler }) => {
   const [selectedItem, setSelectedItem] = useState<Record<string, any> | null>(null);
-  // maybe move out of component
-  const [rowsPerPage, setRowsPerPage] = useState(25);
-
   const handleRowClick = (item: Record<string, any>) => {
     setSelectedItem(item);
     if (rowClickHandler) {
@@ -46,7 +43,7 @@ const CommonTable: React.FC<Props<any>> = ({ data = [], columns, rowClickHandler
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.slice(0, rowsPerPage).map((item, index) => (
+            {data.map((item, index) => (
               <TableRow key={index} onClick={() => handleRowClick(item)}>
                 {columns.map((column) => (
                   <TableCell key={column.key}>{item[column.key]}</TableCell>

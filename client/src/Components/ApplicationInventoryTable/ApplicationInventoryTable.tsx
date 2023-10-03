@@ -46,27 +46,24 @@ const ApplicationInventoryTable: React.FC = ({ }) => {
   const [tableData, setTableData] = useState<Application[]>([]); 
   const [selectedApp, setSelectedApp] = useState<Application | undefined>();
   const [rowsPerPage, setRowsPerPage] = useState<number>(25);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
 
-  const fetchData = async () => {
+  const fetchData = async ({page = currentPage, size = rowsPerPage}) => {
     const response  = await get('', {
-      pageNumber: 1,
-      pageSize: 25
+      pageNumber: page,
+      pageSize: size
     });
 
-
     const newData:Application[] = response?.appRows;
-
-    console.log("response", response);
-    console.log("newData", newData);
-
     setTableData(newData);
 
+    console.log("newData", newData)
   }
 
   useEffect(() => {
-    fetchData()
+    fetchData({})
   }, [])
 
   const handleRowClick = (app: Application) => {
@@ -74,7 +71,9 @@ const ApplicationInventoryTable: React.FC = ({ }) => {
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<{ value: string }>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    const newRowsPerPage = parseInt(event.target.value, 10);
+    setRowsPerPage(newRowsPerPage);
+    fetchData({ size: newRowsPerPage });
   };
 
   const onModalClose = () => {
